@@ -28,7 +28,7 @@ body {
     inset: 0;
     width: 100%;
     height: 100%;
-    z-index: 1000;
+    z-index: 0;
     pointer-events: none;
 }
 
@@ -40,8 +40,9 @@ body {
     width: 100%;
     max-width: 680px;
     padding: 48px 32px;
-    /* Delay fade-in until canvas intro begins to clear (~2s) */
-    animation: fadeIn 0.9s ease 2s both;
+    position: relative;
+    z-index: 1;
+    animation: fadeIn 0.7s ease 0.15s both;
 }
 
 /* ---- Header / Profile ---- */
@@ -58,20 +59,20 @@ body {
     filter: drop-shadow(0 0 14px rgba(200, 80, 50, 0.5)) drop-shadow(0 0 36px rgba(100, 50, 200, 0.3));
 }
 
-/* ---- Links wrapper (Bean + buttons side by side) ---- */
+/* ---- Links wrapper (Bean absolute-left, buttons full-width centered) ---- */
 .links-wrapper {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    gap: 12px;
+    position: relative;
     width: 100%;
+    /* left padding reserves space so Bean doesn't overlap button text */
+    padding-left: 140px;
 }
 
 .bean-presenter {
+    position: absolute;
+    left: -16px;
+    bottom: -12px;
     width: 190px;
-    flex-shrink: 0;
-    /* Nudge him up slightly so he looks like he's standing beside the buttons */
-    margin-bottom: -12px;
+    z-index: 2;
     filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.65));
 }
 
@@ -80,8 +81,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 14px;
-    flex: 1;
-    min-width: 0;
+    width: 100%;
 }
 
 /* ---- Buttons (base) ---- */
@@ -233,6 +233,11 @@ body {
 
     .bean-presenter {
         width: 150px;
+        left: -10px;
+    }
+
+    .links-wrapper {
+        padding-left: 110px;
     }
 
     .btn {
@@ -256,10 +261,9 @@ body {
         width: 260px;
     }
 
-    /* Stack layout: hide Bean, center buttons full-width */
+    /* Hide Bean, remove padding, center buttons full-width */
     .links-wrapper {
-        flex-direction: column;
-        align-items: center;
+        padding-left: 0;
     }
 
     .bean-presenter {
@@ -273,7 +277,6 @@ body {
     .btn {
         font-size: 0.95rem;
         padding: 15px 20px;
-        justify-content: flex-start;
     }
 
     .btn-label {

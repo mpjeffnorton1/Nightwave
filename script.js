@@ -3,8 +3,8 @@
 // =========================================
 
 // ---- Intro Canvas Animation ----
-// Draws rainbow ribbons fanning from the bottom-center (like the Nightwave logo),
-// then fades out to reveal the background image.
+// Transparent overlay: content is visible beneath. Ribbons fan from
+// the bottom-center with soft S-curves and glowing edges, then fade out.
 (function () {
     const canvas = document.getElementById('intro-canvas');
     if (!canvas) return;
@@ -17,64 +17,94 @@
     resize();
     window.addEventListener('resize', resize);
 
-    // Ribbon colors matching the Nightwave logo palette (left → right)
+    // Nightwave logo color palette — left → right ribbon order
+    // Each entry: [r, g, b, shadow-r, shadow-g, shadow-b]
     const COLORS = [
-        [192,  57,  43],  // deep red
-        [210,  75,  18],  // orange-red
-        [225, 138,  25],  // orange
-        [195, 168,  18],  // gold / yellow
-        [ 28, 105,  48],  // forest green
-        [ 18,  88,  88],  // dark teal
-        [ 28,  78, 150],  // deep blue
-        [ 98,  38, 122],  // purple
+        [210,  50,  35, 255,  60,  40],  // deep red
+        [220,  85,  15, 255, 110,  20],  // orange-red
+        [230, 145,  20, 255, 170,  30],  // orange
+        [200, 175,  15, 240, 210,  20],  // gold
+        [ 25, 110,  45,  35, 160,  60],  // forest green
+        [ 15,  90,  90,  20, 140, 130],  // dark teal
+        [ 25,  80, 155,  40, 110, 210],  // deep blue
+        [105,  35, 130, 160,  50, 190],  // purple
     ];
 
-    const NUM_RIBBONS  = COLORS.length;
-    const SPREAD_RAD   = (162 * Math.PI) / 180; // total fan angle
-    const GROW_MS      = 2000;   // ribbons bloom for 2 s
-    const HOLD_MS      = 300;    // brief pause at full size
-    const FADE_MS      = 1000;   // fade to reveal background.png
-    const TOTAL_MS     = GROW_MS + HOLD_MS + FADE_MS;
+    const NUM_RIBBONS = COLORS.length;
+    const SPREAD_RAD  = (158 * Math.PI) / 180; // total fan angle
+    const GROW_MS     = 2200;   // ribbons bloom
+    const HOLD_MS     = 200;    // brief pause
+    const FADE_MS     = 900;    // fade out
+    const TOTAL_MS    = GROW_MS + HOLD_MS + FADE_MS;
 
     let startTime = null;
 
     function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+    function easeInOut(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
 
-    function drawRibbon(cx, oy, angle, length, halfW, color, baseAlpha) {
-        const [r, g, b] = color;
+    // Draw one ribbon with a glow pass (wide, soft) + core pass (narrower, solid)
+    function drawRibbon(cx, oy, angle, length, halfW, color) {
+        const [r, g, b, sr, sg, sb] = color;
 
-        // Perpendicular direction (for ribbon thickness)
+        // Perpendicular direction for ribbon width
         const px = -Math.sin(angle);
         const py =  Math.cos(angle);
 
-        // Tip of the ribbon
+        // End point of the ribbon
         const ex = cx + Math.cos(angle) * length;
         const ey = oy + Math.sin(angle) * length;
 
-        // Quadratic control point — follows the ribbon direction
-        const cpX = cx + Math.cos(angle) * length * 0.45;
-        const cpY = oy + Math.sin(angle) * length * 0.45;
+        // S-curve control points
+        // cp1 starts close and sweeps inward, cp2 follows the outward angle
+        const sway = length * 0.18 * (angle < -Math.PI / 2 ? -1 : 1);
+        const cp1x = cx + Math.cos(angle) * length * 0.25 + Math.sin(angle) * sway * 0.5;
+        const cp1y = oy + Math.sin(angle) * length * 0.25 - Math.cos(angle) * sway * 0.5;
+        const cp2x = cx + Math.cos(angle) * length * 0.65 + Math.sin(angle) * sway * 0.2;
+        const cp2y = oy + Math.sin(angle) * length * 0.65 - Math.cos(angle) * sway * 0.2;
 
-        // Gradient: opaque at base, transparent at tip
-        const grad = ctx.createLinearGradient(cx, oy, ex, ey);
-        grad.addColorStop(0,   `rgba(${r},${g},${b},${baseAlpha})`);
-        grad.addColorStop(0.55,`rgba(${r},${g},${b},${baseAlpha * 0.75})`);
-        grad.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+        function buildPath(widthMult) {
+            const hw = halfW * widthMult;
+            ctx.beginPath();
+            ctx.moveTo(cx + px * hw, oy + py * hw);
+            ctx.bezierCurveTo(
+                cp1x + px * hw * 0.6, cp1y + py * hw * 0.6,
+                cp2x + px * hw * 0.2, cp2y + py * hw * 0.2,
+                ex, ey
+            );
+            ctx.bezierCurveTo(
+                cp2x - px * hw * 0.2, cp2y - py * hw * 0.2,
+                cp1x - px * hw * 0.6, cp1y - py * hw * 0.6,
+                cx - px * hw, oy - py * hw
+            );
+            ctx.closePath();
+        }
 
+        // Gradient: rich at base, transparent at tip
+        // Note: rr/gg/bb used to avoid shadowing the loop's r/g/b in nested scope
+        const [rr, gg, bb] = color;
+        function makeGrad(alpha) {
+            const grad = ctx.createLinearGradient(cx, oy, ex, ey);
+            grad.addColorStop(0,    `rgba(${rr},${gg},${bb},${alpha})`);
+            grad.addColorStop(0.45, `rgba(${rr},${gg},${bb},${alpha * 0.8})`);
+            grad.addColorStop(1,    `rgba(${rr},${gg},${bb},0)`);
+            return grad;
+        }
+
+        // -- Glow pass (wide, blurred) --
         ctx.save();
-        ctx.beginPath();
-        // Left edge → tip → right edge → close
-        ctx.moveTo(cx + px * halfW, oy + py * halfW);
-        ctx.quadraticCurveTo(
-            cpX + px * halfW * 0.22, cpY + py * halfW * 0.22,
-            ex, ey
-        );
-        ctx.quadraticCurveTo(
-            cpX - px * halfW * 0.22, cpY - py * halfW * 0.22,
-            cx - px * halfW, oy - py * halfW
-        );
-        ctx.closePath();
-        ctx.fillStyle = grad;
+        ctx.shadowBlur   = 38;
+        ctx.shadowColor  = `rgba(${sr},${sg},${sb},0.95)`;
+        buildPath(1.9);
+        ctx.fillStyle = makeGrad(0.22);
+        ctx.fill();
+        ctx.restore();
+
+        // -- Core pass (tighter, more opaque) --
+        ctx.save();
+        ctx.shadowBlur   = 18;
+        ctx.shadowColor  = `rgba(${sr},${sg},${sb},0.7)`;
+        buildPath(1.0);
+        ctx.fillStyle = makeGrad(0.82);
         ctx.fill();
         ctx.restore();
     }
@@ -86,56 +116,47 @@
         const W = canvas.width;
         const H = canvas.height;
 
-        // Dark base — same tone as the background image
-        ctx.fillStyle = '#0d0d0d';
-        ctx.fillRect(0, 0, W, H);
+        // Clear to fully transparent — page content shows through
+        ctx.clearRect(0, 0, W, H);
 
-        const cx      = W / 2;
-        const oy      = H + 40;                      // origin just below viewport
-        const maxLen  = Math.hypot(W, H) * 0.92;    // reach corners
-        const halfW   = W * 0.055;                   // ribbon half-width at base
+        const cx     = W / 2;
+        const oy     = H + 35;                        // origin just below viewport
+        const maxLen = Math.hypot(W, H) * 0.92;
+        const halfW  = W * 0.065;                     // ribbon half-width at base
 
-        // Outer ribbons bloom slightly ahead of inner ones for a "spread" feel
         for (let i = 0; i < NUM_RIBBONS; i++) {
             const t     = i / (NUM_RIBBONS - 1);
             const angle = -Math.PI / 2 + (-SPREAD_RAD / 2 + t * SPREAD_RAD);
 
-            // Outer ribbons lead by up to 150 ms
-            const lead      = 150 * Math.abs(t - 0.5) * 2;
-            const growInput = Math.max(elapsed - lead, 0) / GROW_MS;
-            const growP     = easeOut(Math.min(growInput, 1));
-            const length    = maxLen * growP;
+            // Outer ribbons lead slightly for a natural "bloom" effect
+            const lead  = 180 * Math.abs(t - 0.5) * 2;
+            const growP = easeOut(Math.min(Math.max(elapsed - lead, 0) / GROW_MS, 1));
+            const length = maxLen * growP;
 
-            if (length > 0) {
-                drawRibbon(cx, oy, angle, length, halfW, COLORS[i], 0.9);
+            if (length > 1) {
+                drawRibbon(cx, oy, angle, length, halfW, COLORS[i]);
             }
         }
 
-        // Glowing origin point
+        // Warm glow at the origin point
         const globalGrow = easeOut(Math.min(elapsed / GROW_MS, 1));
         if (globalGrow > 0) {
-            const gr = Math.min(90 * globalGrow, 90);
+            const gr = 75 * globalGrow;
             const glow = ctx.createRadialGradient(cx, oy, 0, cx, oy, gr);
-            glow.addColorStop(0,   `rgba(255,235,180,${0.95 * globalGrow})`);
-            glow.addColorStop(0.35,`rgba(255,165, 50,${0.55 * globalGrow})`);
+            glow.addColorStop(0,   `rgba(255,235,180,${0.9 * globalGrow})`);
+            glow.addColorStop(0.4, `rgba(255,160, 50,${0.5 * globalGrow})`);
             glow.addColorStop(1,   'rgba(255,80,0,0)');
+            ctx.save();
+            ctx.shadowBlur  = 30;
+            ctx.shadowColor = 'rgba(255,200,80,0.8)';
             ctx.fillStyle = glow;
             ctx.beginPath();
             ctx.arc(cx, oy, gr, 0, Math.PI * 2);
             ctx.fill();
+            ctx.restore();
         }
 
-        // Subtle vignette so edges blend into dark bg
-        const vignette = ctx.createRadialGradient(
-            cx, H / 2, H * 0.3,
-            cx, H / 2, H * 0.85
-        );
-        vignette.addColorStop(0, 'rgba(0,0,0,0)');
-        vignette.addColorStop(1, 'rgba(0,0,0,0.55)');
-        ctx.fillStyle = vignette;
-        ctx.fillRect(0, 0, W, H);
-
-        // Fade out — revealing background.png underneath
+        // Fade canvas out — background.png and content beneath are already visible
         if (elapsed >= GROW_MS + HOLD_MS) {
             const fadeP = Math.min((elapsed - GROW_MS - HOLD_MS) / FADE_MS, 1);
             canvas.style.opacity = String(1 - fadeP);
@@ -145,22 +166,18 @@
             }
         }
 
-        if (elapsed < TOTAL_MS) {
-            requestAnimationFrame(frame);
-        }
+        if (elapsed < TOTAL_MS) requestAnimationFrame(frame);
     }
 
     requestAnimationFrame(frame);
 })();
 
 
-// ---- Button interactions (after DOM ready) ----
+// ---- Button interactions ----
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Ripple effect on button click
-    const buttons = document.querySelectorAll('.btn');
-
-    buttons.forEach(btn => {
+    // Ripple on click
+    document.querySelectorAll('.btn').forEach(btn => {
         btn.addEventListener('click', function (e) {
             const existing = this.querySelector('.ripple');
             if (existing) existing.remove();
@@ -179,22 +196,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Staggered entrance — delayed to sync with canvas fade-out start (~2 s)
-    const linkItems = document.querySelectorAll('.links .btn');
+    // Staggered button entrance — starts immediately alongside the canvas animation
+    document.querySelectorAll('.links .btn').forEach((btn, index) => {
+        btn.style.opacity    = '0';
+        btn.style.transform  = 'translateY(16px)';
+        btn.style.transition = `opacity 0.45s ease ${0.25 + index * 0.12}s, transform 0.45s ease ${0.25 + index * 0.12}s`;
 
-    setTimeout(() => {
-        linkItems.forEach((btn, index) => {
-            btn.style.opacity    = '0';
-            btn.style.transform  = 'translateY(16px)';
-            btn.style.transition = `opacity 0.45s ease ${index * 0.12}s, transform 0.45s ease ${index * 0.12}s`;
-
+        requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    btn.style.opacity   = '1';
-                    btn.style.transform = 'translateY(0)';
-                });
+                btn.style.opacity   = '1';
+                btn.style.transform = 'translateY(0)';
             });
         });
-    }, 2050); // starts just after container begins fading in
+    });
 
 });
