@@ -1,0 +1,295 @@
+/* =========================================
+   Nightwave Linktree - style.css
+   ========================================= */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #111;
+    background-image: url('images/background.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    overflow-x: hidden;
+}
+
+/* ---- Intro canvas ---- */
+#intro-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* ---- Container ---- */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 680px;
+    padding: 48px 32px;
+    /* Delay fade-in until canvas intro begins to clear (~2s) */
+    animation: fadeIn 0.9s ease 2s both;
+}
+
+/* ---- Header / Profile ---- */
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 36px;
+}
+
+.logo {
+    width: 440px;
+    max-width: 90vw;
+    filter: drop-shadow(0 0 14px rgba(200, 80, 50, 0.5)) drop-shadow(0 0 36px rgba(100, 50, 200, 0.3));
+}
+
+/* ---- Links wrapper (Bean + buttons side by side) ---- */
+.links-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 12px;
+    width: 100%;
+}
+
+.bean-presenter {
+    width: 190px;
+    flex-shrink: 0;
+    /* Nudge him up slightly so he looks like he's standing beside the buttons */
+    margin-bottom: -12px;
+    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.65));
+}
+
+/* ---- Links ---- */
+.links {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* ---- Buttons (base) ---- */
+.btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 18px 32px;
+    border-radius: 50px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    /* Dark semi-transparent fill */
+    background: rgba(12, 12, 12, 0.82);
+    /* Transparent border — gradient applied via ::before */
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    overflow: hidden;
+    z-index: 0;
+}
+
+/* Gradient border using pseudo-element */
+.btn::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 52px;
+    background: linear-gradient(90deg, #c0392b, #e67e22, #c8b020, #27ae60, #2471a3, #6c3483);
+    z-index: -1;
+    transition: opacity 0.2s ease;
+}
+
+/* Ripple element injected by JS */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple-anim 0.55s linear;
+    background: rgba(255, 255, 255, 0.18);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.btn-icon {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.btn-label {
+    flex: 1;
+    text-align: center;
+    /* Offset so label appears visually centered accounting for icon */
+    padding-right: 26px;
+}
+
+/* ---- Rainbow hover (all buttons) ---- */
+.btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    animation: rainbow-glow 1.8s linear infinite;
+}
+
+.btn:hover::before {
+    animation: rainbow-border 1.8s linear infinite;
+}
+
+/* ---- Animations ---- */
+
+/* Cycles the border gradient through all hues */
+@keyframes rainbow-border {
+    0%   { filter: hue-rotate(0deg)   brightness(1.3); }
+    100% { filter: hue-rotate(360deg) brightness(1.3); }
+}
+
+/* Pulses the outer glow through the rainbow palette */
+@keyframes rainbow-glow {
+    0%   { box-shadow: 0 6px 28px rgba(192,  57,  43, 0.7), 0 0 14px rgba(192,  57,  43, 0.4); }
+    16%  { box-shadow: 0 6px 28px rgba(230, 126,  34, 0.7), 0 0 14px rgba(230, 126,  34, 0.4); }
+    33%  { box-shadow: 0 6px 28px rgba(200, 176,  32, 0.7), 0 0 14px rgba(200, 176,  32, 0.4); }
+    50%  { box-shadow: 0 6px 28px rgba( 39, 174,  96, 0.7), 0 0 14px rgba( 39, 174,  96, 0.4); }
+    66%  { box-shadow: 0 6px 28px rgba( 36, 113, 163, 0.7), 0 0 14px rgba( 36, 113, 163, 0.4); }
+    83%  { box-shadow: 0 6px 28px rgba(108,  52, 131, 0.7), 0 0 14px rgba(108,  52, 131, 0.4); }
+    100% { box-shadow: 0 6px 28px rgba(192,  57,  43, 0.7), 0 0 14px rgba(192,  57,  43, 0.4); }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes ripple-anim {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* ---- Accessibility utility ---- */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* =============================================
+   RESPONSIVE BREAKPOINTS
+   - Desktop:  769px+   (default styles above)
+   - Tablet:   481–768px
+   - Mobile:   ≤480px
+============================================= */
+
+/* ---- Tablet (481px – 768px) ---- */
+@media (max-width: 768px) {
+    .container {
+        max-width: 560px;
+        padding: 40px 24px;
+    }
+
+    .logo {
+        width: 340px;
+    }
+
+    .bean-presenter {
+        width: 150px;
+    }
+
+    .btn {
+        font-size: 1rem;
+        padding: 16px 24px;
+    }
+
+    .btn-icon {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* ---- Mobile (≤480px) ---- */
+@media (max-width: 480px) {
+    .container {
+        padding: 32px 20px;
+    }
+
+    .logo {
+        width: 260px;
+    }
+
+    /* Stack layout: hide Bean, center buttons full-width */
+    .links-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .bean-presenter {
+        display: none;
+    }
+
+    .links {
+        width: 100%;
+    }
+
+    .btn {
+        font-size: 0.95rem;
+        padding: 15px 20px;
+        justify-content: flex-start;
+    }
+
+    .btn-label {
+        text-align: center;
+        padding-right: 0;
+    }
+}
+
+/* ---- Small mobile (≤360px) ---- */
+@media (max-width: 360px) {
+    .logo {
+        width: 220px;
+    }
+
+    .btn {
+        font-size: 0.88rem;
+        padding: 13px 16px;
+    }
+}
