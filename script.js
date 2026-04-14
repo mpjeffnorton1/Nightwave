@@ -210,4 +210,57 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // ---- Secure Form Submission ----
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.textContent;
+            
+            // Collect data
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                // UI: Loading state
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Sending...';
+
+                // Send to Cloudflare Worker
+                // Replace URL with your actual Worker URL after deployment
+                const response = await fetch('https://your-worker-subdomain.workers.dev', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                });
+
+                if (!response.ok) throw new Error('Failed to send');
+
+                // UI: Success state
+                contactForm.reset();
+                submitBtn.textContent = 'Message Sent!';
+                submitBtn.style.backgroundColor = '#27ae60'; // Success green
+
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalBtnText;
+                    submitBtn.style.backgroundColor = '';
+                }, 3000);
+
+            } catch (err) {
+                console.error('Submission error:', err);
+                submitBtn.textContent = 'Error! Try Again';
+                submitBtn.style.backgroundColor = '#c0392b'; // Error red
+                
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalBtnText;
+                    submitBtn.style.backgroundColor = '';
+                }, 3000);
+            }
+        });
+    }
+
 });
