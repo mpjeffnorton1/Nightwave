@@ -200,6 +200,28 @@ body {
     }
 }
 
+/* ---- Footer ---- */
+.footer {
+    margin-top: 80px;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    letter-spacing: 0.05em;
+}
+
+.footer a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.footer a:hover {
+    color: #e67e22; /* Matches one of the rainbow colors */
+    text-shadow: 0 0 8px rgba(230, 126, 34, 0.5);
+}
+
 /* ---- Accessibility utility ---- */
 .visually-hidden {
     position: absolute;

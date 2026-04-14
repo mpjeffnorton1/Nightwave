@@ -1,0 +1,15 @@
+name = "nightwave-linktree"
+main = "worker.js"
+compatibility_date = "2024-04-01"
+
+# D1 Database Binding
+# Once you create your database, you'll replace 'database_id' with your actual ID.
+[[d1_databases]]
+binding = "DB"
+database_name = "nightwave_db"
+database_id = "your-database-id-here"
+
+[vars]
+# For encryption, we'll use a secret for the master key.
+# Do NOT put the actual key here. Use 'wrangler secret put MASTER_KEY' in your terminal.
+ENCRYPTION_ALGORITHM = "AES-GCM"
