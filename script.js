@@ -264,8 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     recaptchaToken:   token,
                 };
 
-                // Replace URL with your actual Worker URL after deployment
-                const response = await fetch('https://your-worker-subdomain.workers.dev', {
+                const response = await fetch('/api/apply', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload),
