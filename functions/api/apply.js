@@ -140,6 +140,10 @@ export async function onRequestPost(context) {
     }
 
     // Verify reCAPTCHA v3
+    if (!env.RECAPTCHA_SECRET_KEY) {
+      console.error('reCAPTCHA: RECAPTCHA_SECRET_KEY is not set');
+      return json({ error: 'Server configuration error' }, 500);
+    }
     const recaptchaRes = await fetch('https://www.google.com/recaptcha/api/siteverify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -147,7 +151,7 @@ export async function onRequestPost(context) {
     });
     const recaptchaData = await recaptchaRes.json();
     const minScore = parseFloat(env.RECAPTCHA_MIN_SCORE || '0.5');
-    console.log(`reCAPTCHA: success=${recaptchaData.success}, score=${recaptchaData.score}`);
+    console.log(`reCAPTCHA: success=${recaptchaData.success}, score=${recaptchaData.score}, errors=${JSON.stringify(recaptchaData['error-codes'])}`);
     if (!recaptchaData.success || recaptchaData.score < minScore) {
       return json({ error: 'reCAPTCHA verification failed' }, 400);
     }
