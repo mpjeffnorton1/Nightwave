@@ -8,23 +8,22 @@ Nightwave is a social media link hub (linktree-style) for a Twitch streamer, fea
 
 ## Commands
 
-No build system or package.json — this is a static site with a Cloudflare Worker backend.
+No build system or package.json — this is a static site with a Cloudflare Pages backend.
 
 ```bash
-# Local development (serves worker + static files)
-wrangler dev
+# Local development (serves Pages Functions + static files)
+wrangler pages dev .
 
-# Deploy the Cloudflare Worker
-wrangler deploy
+# Deploy manually (GitHub Actions handles this automatically on push to main)
+npx wrangler pages deploy . --project-name nightwave --branch main --commit-dirty=true
 
-# Set the encryption secret (required for form submission)
-wrangler secret put MASTER_KEY
+# Set Pages secrets (RECAPTCHA_SECRET_KEY, DISCORD_WEBHOOK_URL)
+npx wrangler pages secret put RECAPTCHA_SECRET_KEY --project-name nightwave
+npx wrangler pages secret put DISCORD_WEBHOOK_URL --project-name nightwave
 
-# Create the D1 database (first-time setup)
-wrangler d1 create nightwave_db
+# Query the D1 database
+npx wrangler d1 execute nightwave_db --command "SELECT * FROM applications ORDER BY created_at DESC LIMIT 10;"
 ```
-
-After creating the D1 database, update `database_id` in `wrangler.toml` with the returned ID.
 
 ## Architecture
 
@@ -34,15 +33,26 @@ After creating the D1 database, update `database_id` in `wrangler.toml` with the
 - `script.js` — canvas ribbon animation (8 S-curved colored ribbons), button ripple effects, staggered entrance animations, and form handling
 - `style.css` — dark theme (#111), responsive (max-width 680px), Nightwave/Bean branding
 
-**Backend** (`worker.js`):
-- Cloudflare Worker handling POST form submissions
-- Encrypts every form field with AES-GCM (random IV per field) before storing in D1
-- Binds to D1 database via `DB` binding; encryption algorithm set via `ENCRYPTION_ALGORITHM` env var; `MASTER_KEY` is a Worker secret
+**Backend** (`functions/api/apply.js`):
+- Cloudflare Pages Function (route: `POST /api/apply`) — NOT a standalone Worker
+- Validates input, verifies reCAPTCHA v3 (score ≥ 0.5), stores plain-text in D1, sends Discord embed webhook
+- Binds to D1 via `DB`; secrets: `RECAPTCHA_SECRET_KEY`, `DISCORD_WEBHOOK_URL`; var: `RECAPTCHA_MIN_SCORE`
+- `worker.js` exists in repo as reference only — the standalone Worker has been deleted from Cloudflare
 
 **Config** (`wrangler.toml`):
-- Worker name: `nightwave`, entry: `worker.js`
-- D1 binding: `DB` → `nightwave_db` (database ID must be filled in)
-- Var: `ENCRYPTION_ALGORITHM = "AES-GCM"`
+- Pages project: `nightwave`, `pages_build_output_dir = "."`
+- D1 binding: `DB` → `nightwave_db` (ID: `eb668d5d-646c-4e25-84d4-636b55f82c20`)
+- Var: `RECAPTCHA_MIN_SCORE = "0.5"`
+
+**Deployment** (`.github/workflows/deploy.yml`):
+- Auto-deploys on push to `main` via GitHub Actions using `wrangler pages deploy`
+- Requires GitHub secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
+
+**DNS / Hosting**:
+- Cloudflare Pages project: `nightwave` (account: `90f6cd12811c6b7a86c91424ff618a71`)
+- Custom domains: `onlynightwave.com` (A record, CNAME-flattened) and `www.onlynightwave.com` (CNAME → `nightwave.pages.dev`)
+- Zone ID: `d972776bb52432eea3caf9463cd9b8be`
+- D1 database ID: `eb668d5d-646c-4e25-84d4-636b55f82c20`
 
 **Assets** (`images/`): Reference with relative paths. Key assets: `Bean.png` (mascot), `background.png`, `Nightwave with Bean Logo.png`.
 

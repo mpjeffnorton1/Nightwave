@@ -11,3 +11,6 @@ node_modules/
 # Rust server configuration
 rustserverrules.md
 serverapplicationquestions.md
+
+# Claude Code memory (local only, never commit)
+.claude/
