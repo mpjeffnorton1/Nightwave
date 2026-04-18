@@ -389,3 +389,357 @@ body {
     border: none;
     margin-top: 10px;
 }
+
+/* ---- Form labels ---- */
+.form-group label {
+    display: block;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: 'Arial', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.label-note {
+    font-weight: 400;
+    font-size: 0.82rem;
+    letter-spacing: 0;
+    text-transform: none;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.label-optional {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+/* ---- Form sections ---- */
+.form-section {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 28px;
+    margin-top: 28px;
+}
+
+.form-section:first-child {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.form-section-last {
+    padding-bottom: 8px;
+}
+
+.form-section-title {
+    color: #e67e22;
+    font-size: 0.8rem;
+    font-family: 'Arial', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+/* ---- Side-by-side inputs ---- */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 480px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ---- Pill-style radio / checkbox groups ---- */
+.pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(12, 12, 12, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Arial', sans-serif;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.75);
+    user-select: none;
+}
+
+.pill input[type="checkbox"],
+.pill input[type="radio"] {
+    display: none;
+}
+
+.pill:hover {
+    border-color: rgba(230, 126, 34, 0.6);
+    color: #fff;
+}
+
+.pill:has(input:checked) {
+    background: rgba(230, 126, 34, 0.18);
+    border-color: #e67e22;
+    color: #fff;
+}
+
+/* ---- Single checkbox with label ---- */
+.checkbox-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    accent-color: #e67e22;
+    margin-top: 1px;
+    cursor: pointer;
+}
+
+.checkbox-group label {
+    display: inline;
+    font-family: 'Arial', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 0;
+    text-transform: none;
+    margin-bottom: 0;
+    cursor: pointer;
+    line-height: 1.5;
+}
+
+.checkbox-group label a {
+    color: #e67e22;
+    text-decoration: underline;
+}
+
+.checkbox-group label strong {
+    color: #fff;
+}
+
+/* ---- reCAPTCHA notice ---- */
+.recaptcha-notice {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.35);
+    text-align: center;
+    margin-top: 8px;
+    line-height: 1.5;
+}
+
+.recaptcha-notice a {
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: underline;
+}
+
+/* =============================================
+   RULES PAGE
+============================================= */
+
+.rules-section {
+    width: 100%;
+    margin-top: 20px;
+    animation: fadeIn 0.4s ease both;
+}
+
+.rules-intro {
+    background: rgba(12, 12, 12, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.rules-intro p {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.6;
+}
+
+.rules-policy {
+    margin-bottom: 40px;
+}
+
+.policy-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-family: 'Arial', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.policy-badge--zero {
+    background: rgba(192, 57, 43, 0.25);
+    border: 1px solid rgba(192, 57, 43, 0.6);
+    color: #e74c3c;
+}
+
+.policy-badge--strike {
+    background: rgba(230, 126, 34, 0.2);
+    border: 1px solid rgba(230, 126, 34, 0.5);
+    color: #e67e22;
+}
+
+.policy-badge--raid {
+    background: rgba(36, 113, 163, 0.2);
+    border: 1px solid rgba(36, 113, 163, 0.5);
+    color: #3498db;
+}
+
+.strike-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: rgba(230, 126, 34, 0.08);
+    border-left: 3px solid #e67e22;
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 16px;
+    font-family: 'Arial', sans-serif;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.strike-legend strong {
+    color: #fff;
+}
+
+.rules-note {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+.rule-item {
+    display: flex;
+    gap: 16px;
+    background: rgba(12, 12, 12, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+}
+
+.rule-number {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 50%;
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.rule-body h4 {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    letter-spacing: 0.04em;
+}
+
+.rule-body p {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.55;
+    margin-bottom: 6px;
+}
+
+.rule-body ul {
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+.rule-body ul li {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+}
+
+.rule-note {
+    font-size: 0.83rem;
+    color: rgba(255, 255, 255, 0.45);
+    margin-top: 6px;
+    line-height: 1.5;
+}
+
+/* Raiding schedule pills */
+.raid-schedule {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.raid-day {
+    flex: 1;
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-family: 'Arial', sans-serif;
+    font-size: 0.88rem;
+}
+
+.raid-day strong {
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.raid-day--allowed {
+    background: rgba(39, 174, 96, 0.15);
+    border: 1px solid rgba(39, 174, 96, 0.4);
+    color: #2ecc71;
+}
+
+.raid-day--no-raid {
+    background: rgba(192, 57, 43, 0.15);
+    border: 1px solid rgba(192, 57, 43, 0.4);
+    color: #e74c3c;
+}
+
+.rules-cta {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}

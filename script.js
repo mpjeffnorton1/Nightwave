@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ---- Secure Form Submission ----
+    // ---- Rust Application Form Submission ----
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
         contactForm.addEventListener('submit', async (e) => {
@@ -218,30 +218,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
-            
-            // Collect data
-            const formData = new FormData(contactForm);
-            const data = Object.fromEntries(formData.entries());
+            const siteKey = contactForm.dataset.sitekey;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
 
             try {
-                // UI: Loading state
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Sending...';
+                // Get reCAPTCHA v3 token
+                const token = await new Promise((resolve) => {
+                    grecaptcha.ready(() => {
+                        grecaptcha.execute(siteKey, { action: 'apply' }).then(resolve);
+                    });
+                });
 
-                // Send to Cloudflare Worker
+                // Build payload — player type is a multi-checkbox so collect all checked values
+                const playerType = [...contactForm.querySelectorAll('[name="playerType"]:checked')]
+                    .map(el => el.value).join(', ');
+
+                const payload = {
+                    name:             contactForm.querySelector('#name').value,
+                    email:            contactForm.querySelector('#email').value,
+                    discordUsername:  contactForm.querySelector('#discordUsername').value,
+                    twitchName:       contactForm.querySelector('#twitchName').value,
+                    rustUsername:     contactForm.querySelector('#rustUsername').value,
+                    steamName:        contactForm.querySelector('#steamName').value,
+                    steamLink:        contactForm.querySelector('#steamLink').value,
+                    streamingLinks:   contactForm.querySelector('#streamingLinks').value || null,
+                    age:              contactForm.querySelector('#age').value,
+                    timezoneCountry:  contactForm.querySelector('#timezoneCountry').value,
+                    rustHours:        contactForm.querySelector('#rustHours').value,
+                    playerType:       playerType || null,
+                    rpExperience:     contactForm.querySelector('#rpExperience').value || null,
+                    playStyle:        contactForm.querySelector('[name="playStyle"]:checked')?.value || null,
+                    whatYouBring:     contactForm.querySelector('#whatYouBring').value,
+                    createsContent:   contactForm.querySelector('#createsContent').value || null,
+                    okToFeature:      contactForm.querySelector('[name="okToFeature"]:checked')?.value || null,
+                    handlesConflict:  contactForm.querySelector('#handlesConflict').value,
+                    everBanned:       contactForm.querySelector('#everBanned').value,
+                    everCheated:      contactForm.querySelector('[name="everCheated"]:checked')?.value || null,
+                    understandsRules: contactForm.querySelector('#understandsRules').checked,
+                    whyJoin:          contactForm.querySelector('#whyJoin').value,
+                    funnyFact:        contactForm.querySelector('#funnyFact').value,
+                    rustBusiness:     contactForm.querySelector('#rustBusiness').value,
+                    agreedToRules:    contactForm.querySelector('#agreedToRules').checked,
+                    recaptchaToken:   token,
+                };
+
                 // Replace URL with your actual Worker URL after deployment
                 const response = await fetch('https://your-worker-subdomain.workers.dev', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
+                    body: JSON.stringify(payload),
                 });
 
-                if (!response.ok) throw new Error('Failed to send');
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.error || 'Failed to send');
+                }
 
-                // UI: Success state
                 contactForm.reset();
-                submitBtn.textContent = 'Message Sent!';
-                submitBtn.style.backgroundColor = '#27ae60'; // Success green
+                submitBtn.textContent = 'Application Sent!';
+                submitBtn.style.backgroundColor = '#27ae60';
 
                 setTimeout(() => {
                     submitBtn.disabled = false;
@@ -251,9 +288,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             } catch (err) {
                 console.error('Submission error:', err);
-                submitBtn.textContent = 'Error! Try Again';
-                submitBtn.style.backgroundColor = '#c0392b'; // Error red
-                
+                submitBtn.textContent = err.message ? `Error: ${err.message}` : 'Error! Try Again';
+                submitBtn.style.backgroundColor = '#c0392b';
+
                 setTimeout(() => {
                     submitBtn.disabled = false;
                     submitBtn.textContent = originalBtnText;

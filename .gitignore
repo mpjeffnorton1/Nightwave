@@ -4,3 +4,10 @@
 !.dev.vars.example
 .env*
 !.env.example
+
+# dependencies
+node_modules/
+
+# Rust server configuration
+rustserverrules.md
+serverapplicationquestions.md

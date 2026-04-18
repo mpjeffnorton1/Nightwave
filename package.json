@@ -1,0 +1,24 @@
+{
+  "name": "nightwave",
+  "version": "1.0.0",
+  "description": "Link Tree Style Site for the Twitch Streamer Nightwave",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mpjeffnorton1/Nightwave.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/mpjeffnorton1/Nightwave/issues"
+  },
+  "homepage": "https://github.com/mpjeffnorton1/Nightwave#readme",
+  "devDependencies": {
+    "wrangler": "^4.83.0"
+  }
+}

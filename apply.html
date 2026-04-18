@@ -24,16 +24,172 @@
                 Back to Links
             </a>
             <h2 class="section-title">Rust Application</h2>
-            <form id="contact-form" class="contact-form">
-                <div class="form-group">
-                    <input type="text" name="name" placeholder="Name" required aria-label="Your Name">
+
+            <form id="contact-form" class="contact-form" data-sitekey="6LeEGL4sAAAAAGvFmeJk3ILcjlnHVyAUpWO0o_Ib">
+
+                <!-- ── Required Info ── -->
+                <div class="form-section">
+                    <h3 class="form-section-title">Required Info</h3>
+
+                    <div class="form-group">
+                        <label for="name">Name / Username</label>
+                        <input type="text" id="name" name="name" placeholder="Your name or username" required aria-label="Name or username">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="your@email.com" required aria-label="Email address">
+                    </div>
+                    <div class="form-group">
+                        <label for="discordUsername">Discord Username</label>
+                        <input type="text" id="discordUsername" name="discordUsername" placeholder="username or @handle" required aria-label="Discord username">
+                    </div>
+                    <div class="form-group">
+                        <label for="twitchName">Twitch Name</label>
+                        <input type="text" id="twitchName" name="twitchName" placeholder="Your Twitch username" required aria-label="Twitch name">
+                    </div>
+                    <div class="form-group">
+                        <label for="rustUsername">Rust Username <span class="label-note">(In-Game Name)</span></label>
+                        <input type="text" id="rustUsername" name="rustUsername" placeholder="Your in-game display name" required aria-label="Rust in-game username">
+                    </div>
+                    <div class="form-group">
+                        <label for="steamName">Steam Name</label>
+                        <input type="text" id="steamName" name="steamName" placeholder="Your Steam display name" required aria-label="Steam name">
+                    </div>
+                    <div class="form-group">
+                        <label for="steamLink">Steam Profile Link <span class="label-note">(Profile must be public)</span></label>
+                        <input type="url" id="steamLink" name="steamLink" placeholder="https://steamcommunity.com/id/..." required aria-label="Steam profile link">
+                    </div>
+                    <div class="form-group">
+                        <label for="streamingLinks">Other Streaming Links <span class="label-note label-optional">(Optional — YouTube, TikTok, Kick)</span></label>
+                        <input type="text" id="streamingLinks" name="streamingLinks" placeholder="https://..." aria-label="Other streaming platform links">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="email" name="email" placeholder="Email Address" required aria-label="Your Email Address">
+
+                <!-- ── Basic Info ── -->
+                <div class="form-section">
+                    <h3 class="form-section-title">Basic Info</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" name="age" min="13" max="99" placeholder="e.g. 22" required aria-label="Your age">
+                        </div>
+                        <div class="form-group">
+                            <label for="rustHours">Hours in Rust</label>
+                            <input type="number" id="rustHours" name="rustHours" min="0" placeholder="e.g. 500" required aria-label="Hours played in Rust">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="timezoneCountry">Time Zone / Country</label>
+                        <input type="text" id="timezoneCountry" name="timezoneCountry" placeholder="e.g. EST / USA" required aria-label="Time zone and country">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <textarea name="message" placeholder="Why do you want to join?" rows="6" required aria-label="Your Message"></textarea>
+
+                <!-- ── Experience & Playstyle ── -->
+                <div class="form-section">
+                    <h3 class="form-section-title">Experience &amp; Playstyle</h3>
+
+                    <div class="form-group">
+                        <label>What type of player are you? <span class="label-note">(Select all that apply)</span></label>
+                        <div class="pill-group">
+                            <label class="pill"><input type="checkbox" name="playerType" value="PvP"><span>PvP</span></label>
+                            <label class="pill"><input type="checkbox" name="playerType" value="Builder"><span>Builder</span></label>
+                            <label class="pill"><input type="checkbox" name="playerType" value="Farmer"><span>Farmer</span></label>
+                            <label class="pill"><input type="checkbox" name="playerType" value="RP"><span>RP</span></label>
+                            <label class="pill"><input type="checkbox" name="playerType" value="Content Creator"><span>Content Creator</span></label>
+                            <label class="pill"><input type="checkbox" name="playerType" value="All Around"><span>All Around</span></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rpExperience">Have you played on RP or community Rust servers before? If yes, which ones?</label>
+                        <textarea id="rpExperience" name="rpExperience" rows="3" placeholder="e.g. Yes — played on ServerX for 6 months. No — first time." aria-label="RP or community server experience"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Do you prefer solo, duo, or group gameplay?</label>
+                        <div class="pill-group">
+                            <label class="pill radio-pill"><input type="radio" name="playStyle" value="Solo" required><span>Solo</span></label>
+                            <label class="pill radio-pill"><input type="radio" name="playStyle" value="Duo"><span>Duo</span></label>
+                            <label class="pill radio-pill"><input type="radio" name="playStyle" value="Group"><span>Group</span></label>
+                            <label class="pill radio-pill"><input type="radio" name="playStyle" value="Flexible"><span>Flexible</span></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="whatYouBring">What would you bring to Nightwaves Nation?</label>
+                        <textarea id="whatYouBring" name="whatYouBring" rows="4" placeholder="Tell us what you'd contribute to the community..." required aria-label="What you would bring to the server"></textarea>
+                    </div>
                 </div>
+
+                <!-- ── Content & Community ── -->
+                <div class="form-section">
+                    <h3 class="form-section-title">Content &amp; Community</h3>
+
+                    <div class="form-group">
+                        <label for="createsContent">Do you stream or create content? If yes, where can we find you?</label>
+                        <textarea id="createsContent" name="createsContent" rows="2" placeholder="e.g. Yes — twitch.tv/yourname. No." aria-label="Streaming or content creation links"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Are you comfortable being featured in streams, clips, or community content?</label>
+                        <div class="pill-group">
+                            <label class="pill radio-pill"><input type="radio" name="okToFeature" value="Yes" required><span>Yes</span></label>
+                            <label class="pill radio-pill"><input type="radio" name="okToFeature" value="No"><span>No</span></label>
+                            <label class="pill radio-pill"><input type="radio" name="okToFeature" value="Ask me first"><span>Ask me first</span></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="handlesConflict">How do you handle conflict or trash talk in-game?</label>
+                        <textarea id="handlesConflict" name="handlesConflict" rows="3" placeholder="Be honest..." required aria-label="How you handle conflict in-game"></textarea>
+                    </div>
+                </div>
+
+                <!-- ── Rules & Trust ── -->
+                <div class="form-section">
+                    <h3 class="form-section-title">Rules &amp; Trust</h3>
+
+                    <div class="form-group">
+                        <label for="everBanned">Have you ever been banned from a Rust server? If yes, explain honestly.</label>
+                        <textarea id="everBanned" name="everBanned" rows="3" placeholder="No. / Yes — here's what happened and why..." aria-label="Past Rust server bans"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Have you ever used cheats, scripts, or exploits in any game?</label>
+                        <div class="pill-group">
+                            <label class="pill radio-pill"><input type="radio" name="everCheated" value="No" required><span>No</span></label>
+                            <label class="pill radio-pill"><input type="radio" name="everCheated" value="Yes"><span>Yes</span></label>
+                        </div>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="understandsRules" name="understandsRules" required>
+                        <label for="understandsRules">I understand that stream sniping, meta gaming, and toxicity are <strong>not tolerated</strong> on this server.</label>
+                    </div>
+                </div>
+
+                <!-- ── Personality Check ── -->
+                <div class="form-section">
+                    <h3 class="form-section-title">Personality Check</h3>
+
+                    <div class="form-group">
+                        <label for="whyJoin">Why do you want to join Nightwaves Nation specifically?</label>
+                        <textarea id="whyJoin" name="whyJoin" rows="4" placeholder="Tell us why you chose this server over others..." required aria-label="Why you want to join"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="funnyFact">Tell us one funny fact about yourself.</label>
+                        <input type="text" id="funnyFact" name="funnyFact" placeholder="Make us laugh (or cringe)..." required aria-label="Funny fact about yourself">
+                    </div>
+                    <div class="form-group">
+                        <label for="rustBusiness">If you could run one business in Rust RP, what would it be?</label>
+                        <input type="text" id="rustBusiness" name="rustBusiness" placeholder="e.g. A black market weapons dealer..." required aria-label="Your Rust RP business idea">
+                    </div>
+                </div>
+
+                <!-- ── Agreement ── -->
+                <div class="form-section form-section-last">
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="agreedToRules" name="agreedToRules" required>
+                        <label for="agreedToRules">I have read and agree to abide by the <a href="rules.html" target="_blank" rel="noopener noreferrer">server rules</a>.</label>
+                    </div>
+                </div>
+
+                <p class="recaptcha-notice">This form is protected by reCAPTCHA. Google's <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> apply.</p>
+
                 <button type="submit" class="btn submit-btn">Submit Application</button>
             </form>
         </section>
@@ -42,6 +198,8 @@
             <p>Site Powered By <a href="https://relaycomputerconsulting.com" target="_blank" rel="noopener noreferrer">Relay Computer Consulting</a></p>
         </footer>
     </main>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=6LeEGL4sAAAAAGvFmeJk3ILcjlnHVyAUpWO0o_Ib"></script>
     <script src="script.js"></script>
 </body>
 </html>
