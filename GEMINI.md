@@ -14,7 +14,7 @@ A web-based project (Nightwave) consisting of a Linktree-style landing page and 
 
 ## Key Files
 - `index.html` — main linktree page (SEO metadata, canvas animation, social buttons)
-- `apply.html` — Rust server application form (17 questions, pill-style inputs, reCAPTCHA v3)
+- `apply.html` — Rust server application form (live and functional; 17 questions, pill-style inputs, reCAPTCHA v3)
 - `rules.html` — server rules page
 - `script.js` — canvas ribbon animation, button ripple effects, form submission handler
 - `style.css` — dark theme (#111), responsive (max-width 680px)
@@ -42,10 +42,11 @@ A web-based project (Nightwave) consisting of a Linktree-style landing page and 
 - **Entry point:** `functions/api/apply.js` exports `onRequestPost` — this is a Pages Function, not `export default { fetch }`.
 - **Validation:** Server-side validation for all form fields. Parameterized D1 queries only.
 - **Security:** Secrets managed via `wrangler pages secret put --project-name nightwave`. Never use `wrangler secret put` (that targets Workers, not Pages).
+- **reCAPTCHA:** Guards against missing `RECAPTCHA_SECRET_KEY` (returns 500 if unset). Logs `error-codes` from Google for debugging — check Cloudflare Pages → Functions → Logs.
 - **Performance:** Use `truncate()` for Discord embed fields to stay within Discord's 1024-char field limit.
 
 ### Deployment & Tooling
 - Deploy via GitHub push to `main` (preferred) or `npx wrangler pages deploy . --project-name nightwave`.
 - Never use `wrangler deploy` — that targets standalone Workers, not Pages.
 - Secrets: `npx wrangler pages secret put <KEY> --project-name nightwave`.
-- D1 queries: `npx wrangler d1 execute nightwave_db --command "..."`.
+- D1 queries: `npx wrangler d1 execute nightwave_db --remote --command '...'` (use single quotes in PowerShell — double quotes cause SQLITE_ERROR). Alternatively use the Cloudflare Dashboard: dash.cloudflare.com → D1 → nightwave_db → Console.

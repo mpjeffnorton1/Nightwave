@@ -21,15 +21,16 @@ npx wrangler pages deploy . --project-name nightwave --branch main --commit-dirt
 npx wrangler pages secret put RECAPTCHA_SECRET_KEY --project-name nightwave
 npx wrangler pages secret put DISCORD_WEBHOOK_URL --project-name nightwave
 
-# Query the D1 database
-npx wrangler d1 execute nightwave_db --command "SELECT * FROM applications ORDER BY created_at DESC LIMIT 10;"
+# Query the D1 database (use single quotes in PowerShell — double quotes cause SQLITE_ERROR)
+npx wrangler d1 execute nightwave_db --remote --command 'SELECT * FROM applications ORDER BY created_at DESC LIMIT 10'
+# Alternatively, use the Cloudflare Dashboard: dash.cloudflare.com → D1 → nightwave_db → Console
 ```
 
 ## Architecture
 
 **Frontend** (`index.html`, `apply.html`, `script.js`, `style.css`):
 - `index.html` — main linktree page with SEO metadata (JSON-LD structured data, OG/Twitter cards), canvas animation, and social buttons
-- `apply.html` — Rust application form (currently hidden/in-progress)
+- `apply.html` — Rust application form (live and functional)
 - `script.js` — canvas ribbon animation (8 S-curved colored ribbons), button ripple effects, staggered entrance animations, and form handling
 - `style.css` — dark theme (#111), responsive (max-width 680px), Nightwave/Bean branding
 
@@ -37,6 +38,8 @@ npx wrangler d1 execute nightwave_db --command "SELECT * FROM applications ORDER
 - Cloudflare Pages Function (route: `POST /api/apply`) — NOT a standalone Worker
 - Validates input, verifies reCAPTCHA v3 (score ≥ 0.5), stores plain-text in D1, sends Discord embed webhook
 - Binds to D1 via `DB`; secrets: `RECAPTCHA_SECRET_KEY`, `DISCORD_WEBHOOK_URL`; var: `RECAPTCHA_MIN_SCORE`
+- Guards against missing `RECAPTCHA_SECRET_KEY` (returns 500 with log if unset)
+- Logs reCAPTCHA result including `error-codes` for debugging: check Cloudflare Pages → Functions → Logs
 - `worker.js` exists in repo as reference only — the standalone Worker has been deleted from Cloudflare
 
 **Config** (`wrangler.toml`):
