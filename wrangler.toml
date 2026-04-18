@@ -1,5 +1,5 @@
 name = "nightwave"
-main = "worker.js"
+pages_build_output_dir = "."
 compatibility_date = "2026-04-01"
 
 [[d1_databases]]
@@ -8,5 +8,4 @@ database_name = "nightwave_db"
 database_id = "eb668d5d-646c-4e25-84d4-636b55f82c20"
 
 [vars]
-ALLOWED_ORIGIN = "https://onlynightwave.com"
 RECAPTCHA_MIN_SCORE = "0.5"
