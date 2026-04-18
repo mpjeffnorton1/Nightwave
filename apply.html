@@ -127,13 +127,9 @@
                         <label for="createsContent">Do you stream or create content? If yes, where can we find you?</label>
                         <textarea id="createsContent" name="createsContent" rows="2" placeholder="e.g. Yes — twitch.tv/yourname. No." aria-label="Streaming or content creation links"></textarea>
                     </div>
-                    <div class="form-group">
-                        <label>Are you comfortable being featured in streams, clips, or community content?</label>
-                        <div class="pill-group">
-                            <label class="pill radio-pill"><input type="radio" name="okToFeature" value="Yes" required><span>Yes</span></label>
-                            <label class="pill radio-pill"><input type="radio" name="okToFeature" value="No"><span>No</span></label>
-                            <label class="pill radio-pill"><input type="radio" name="okToFeature" value="Ask me first"><span>Ask me first</span></label>
-                        </div>
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="okToFeature" name="okToFeature" required>
+                        <label for="okToFeature">I agree to being featured in stream clips, community content, and in streams.</label>
                     </div>
                     <div class="form-group">
                         <label for="handlesConflict">How do you handle conflict or trash talk in-game?</label>

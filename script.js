@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     playStyle:        contactForm.querySelector('[name="playStyle"]:checked')?.value || null,
                     whatYouBring:     contactForm.querySelector('#whatYouBring').value,
                     createsContent:   contactForm.querySelector('#createsContent').value || null,
-                    okToFeature:      contactForm.querySelector('[name="okToFeature"]:checked')?.value || null,
+                    okToFeature:      contactForm.querySelector('#okToFeature').checked ? 'Yes' : null,
                     handlesConflict:  contactForm.querySelector('#handlesConflict').value,
                     everBanned:       contactForm.querySelector('#everBanned').value,
                     everCheated:      contactForm.querySelector('[name="everCheated"]:checked')?.value || null,
