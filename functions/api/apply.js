@@ -12,7 +12,7 @@
 
 const MAX_LENGTHS = {
   name: 100,
-  email: 255,
+  steam64Id: 30,
   discordUsername: 80,
   twitchName: 80,
   rustUsername: 100,
@@ -35,7 +35,7 @@ const MAX_LENGTHS = {
 };
 
 const REQUIRED_FIELDS = [
-  'name', 'email', 'discordUsername', 'twitchName', 'rustUsername',
+  'name', 'steam64Id', 'discordUsername', 'twitchName', 'rustUsername',
   'steamName', 'steamLink', 'timezoneCountry', 'whatYouBring',
   'handlesConflict', 'everBanned', 'whyJoin', 'funnyFact', 'rustBusiness',
 ];
@@ -61,8 +61,8 @@ function parseIntField(value, name, min, max) {
   return n;
 }
 
-function isValidEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 255;
+function isValidSteam64Id(id) {
+  return /^7656119\d{10}$/.test(String(id).trim());
 }
 
 function isValidSteamUrl(url) {

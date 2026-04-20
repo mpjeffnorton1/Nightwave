@@ -36,8 +36,8 @@
                         <input type="text" id="name" name="name" placeholder="Your name or username" required aria-label="Name or username">
                     </div>
                     <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" placeholder="your@email.com" required aria-label="Email address">
+                        <label for="steam64Id">Steam 64 ID</label>
+                        <input type="text" id="steam64Id" name="steam64Id" placeholder="e.g. 76561198012345678" required aria-label="Steam 64 ID">
                     </div>
                     <div class="form-group">
                         <label for="discordUsername">Discord Username</label>
@@ -127,10 +127,6 @@
                         <label for="createsContent">Do you stream or create content? If yes, where can we find you?</label>
                         <textarea id="createsContent" name="createsContent" rows="2" placeholder="e.g. Yes — twitch.tv/yourname. No." aria-label="Streaming or content creation links"></textarea>
                     </div>
-                    <div class="form-group checkbox-group">
-                        <input type="checkbox" id="okToFeature" name="okToFeature" required>
-                        <label for="okToFeature">I agree to being featured in stream clips, community content, and in streams.</label>
-                    </div>
                     <div class="form-group">
                         <label for="handlesConflict">How do you handle conflict or trash talk in-game?</label>
                         <textarea id="handlesConflict" name="handlesConflict" rows="3" placeholder="Be honest..." required aria-label="How you handle conflict in-game"></textarea>
@@ -182,6 +178,11 @@
                         <input type="checkbox" id="agreedToRules" name="agreedToRules" required>
                         <label for="agreedToRules">I have read and agree to abide by the <a href="rules.html" target="_blank" rel="noopener noreferrer">server rules</a>.</label>
                     </div>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="okToFeature" name="okToFeature" required>
+                    <label for="okToFeature">I agree to being featured in stream clips, community content, and in streams.</label>
                 </div>
 
                 <p class="recaptcha-notice">This form is protected by reCAPTCHA. Google's <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> apply.</p>

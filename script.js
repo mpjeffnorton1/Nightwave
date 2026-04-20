@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const payload = {
                     name:             contactForm.querySelector('#name').value,
-                    email:            contactForm.querySelector('#email').value,
+                    steam64Id:        contactForm.querySelector('#steam64Id').value,
                     discordUsername:  contactForm.querySelector('#discordUsername').value,
                     twitchName:       contactForm.querySelector('#twitchName').value,
                     rustUsername:     contactForm.querySelector('#rustUsername').value,
